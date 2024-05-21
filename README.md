@@ -1,1 +1,1 @@
-# Burgers_Equation_2024
+# Burgers Equation Projekt Specjalnościowy Matematyka 2023/2024
