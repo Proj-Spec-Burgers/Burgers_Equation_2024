@@ -1,0 +1,4 @@
+1. Poprawić LUGauss.h/LUGauss.cpp z czasu O(n^3) na O(n) wykorzystując przypadek szczególny eliminacji.
+2. Poprawić ParDiffEqBurgersImplicit (zmienić stałe + równanie).
+3. Napisać klasę do tworzenia wykresów (przyjmuje pliki .csv i tworzy .png/.jpg)
+4. Napisac transf. Hopf-Cole.
