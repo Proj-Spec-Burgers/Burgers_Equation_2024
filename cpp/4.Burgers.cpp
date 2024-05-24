@@ -8,9 +8,9 @@ ParDiffEqBurgersEuler::ParDiffEqBurgersEuler(double h, double k)
 {
 	beta = ((0.5 * pow(h, 2)) / k) - 0.01; /*satisfy (beta*k)/h^2 < 0.5 for stability*/
 
-	class MidPoint(h, M, midpoint);
-	class IniMatrix(M, N, u);
-	class InitialConditions ini_inital_conditions_u(h, M, N, u, midpoint);
+	MidPoint(h, M, midpoint);
+	IniMatrix(M, N, u);
+	InitialConditions ini_inital_conditions_u(h, M, N, u, midpoint);
 }
 //public function/s
 void ParDiffEqBurgersEuler::Euler()
@@ -28,7 +28,7 @@ void ParDiffEqBurgersEuler::Euler()
 
 	std::string save_file_name{ "Results/Eq4/Euler_Burgers_h_" + std::to_string(h) + "_k_" + std::to_string(k) + "_beta_" + std::to_string(beta) + ".csv" };
 
-	class Save(h, k, M, N, u, save_file_name);
+	Save(h, k, M, N, u, save_file_name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,11 +39,11 @@ ParDiffEqBurgersRK2::ParDiffEqBurgersRK2(double h, double k)
 {
 	beta = ((0.5 * pow(h, 2)) / k) - 0.01; /*satisfy (beta*k)/h^2 < 0.5 for stability*/
 
-	class MidPoint(h, M, midpoint);
-	class IniMatrix(M, N, u);
-	class IniMatrix(M, N, v);
-	class InitialConditions(h, M, N, u, midpoint);
-	class InitialConditions(h, M, N, v, midpoint);
+	MidPoint(h, M, midpoint);
+	IniMatrix(M, N, u);
+	IniMatrix(M, N, v);
+	InitialConditions(h, M, N, u, midpoint);
+	InitialConditions(h, M, N, v, midpoint);
 }
 //public function/s
 void ParDiffEqBurgersRK2::RK2()
@@ -68,7 +68,7 @@ void ParDiffEqBurgersRK2::RK2()
 
 	std::string save_file_name{ "Results/Eq4/RK2_Burgers_h_" + std::to_string(h) + "_k_" + std::to_string(k) + "_beta_" + std::to_string(beta) + ".csv" };
 
-	class Save(h, k, M, N, u, save_file_name);
+	Save(h, k, M, N, u, save_file_name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,23 +79,35 @@ ParDiffEqBurgersImplicit::ParDiffEqBurgersImplicit(double h, double k)
 {
 	beta = ((0.5 * pow(h, 2)) / k) - 0.01; /*satisfy (beta*k)/h^2 < 0.5 for stability*/
 
-	class MidPoint(h, M, midpoint);
-	class IniMatrix(M, M, u);
-	class InitialConditions(h, M, M, u, midpoint);
+	MidPoint(h, M, midpoint);
+	IniMatrix(M, M, u);
+	IniVector(M, b);
+	InitialConditions(h, M, M, u, midpoint);
 }
 //public function/s
 void ParDiffEqBurgersImplicit::Implicit()
 {
-	const double s_0{ (k / (4 * h)) - ((k * beta) / pow(h,2)) };
-	const double s_1{ 1 + ((2 * beta * k) / (pow(h,2))) };
-	const double s_2{ (-k / (4 * h)) - ((k * beta) / pow(h,2)) };
+	const double s{ (beta * k) / pow(h,2) };
+	const double s_0{ -s };
+	const double s_1{ 1 + 2 * s };
+	const double s_2{ -s };;
 
 	for (size_t j = 0; j < M - 1; j++)
 	{
-		class Tri solve(s_0, s_1, s_2, M, j, u);
+		SetVectorb(j);
+		Tri solve(s_0, s_1, s_2, M, j, b, u);
 	}
 
 	std::string save_file_name{ "Results/Eq4/Implicit_Burgers_h_" + std::to_string(h) + "_k_" + std::to_string(k) + "_beta_" + std::to_string(beta) + ".csv" };
 
-	class Save(h, k, M, M, u, save_file_name);
+	Save(h, k, M, M, u, save_file_name);
+}
+void ParDiffEqBurgersImplicit::SetVectorb(const size_t column)
+{
+	b[0] = u[0][column];
+	for (size_t i = 1; i < M - 1; i++)
+	{
+		b[i] = u[i][column] - (k / (4 * h)) * (pow(u[i + 1][column], 2) - pow(u[i - 1][column], 2));
+	}
+	b[M - 1] = u[M - 1][column];
 }

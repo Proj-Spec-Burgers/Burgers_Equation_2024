@@ -16,8 +16,8 @@ private:
 	const size_t N{ 1001 };
 	std::vector<std::vector<double>> u{};
 
-	double h;
-	double k;
+	const double h;
+	const double k;
 };
 
 class ParDiffEq2RK2
@@ -35,6 +35,6 @@ private:
 	std::vector<std::vector<double>> u{};
 	std::vector<std::vector<double>> v{};
 
-	double h;
-	double k;
+	const double h;
+	const double k;
 };

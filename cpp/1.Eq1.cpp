@@ -5,9 +5,9 @@
 ParDiffEq1Euler::ParDiffEq1Euler(double h, double k)
 	: h(h), k(k)
 {
-	class MidPoint(h, M, midpoint);
-	class IniMatrix(M, N, u);
-	class InitialConditions(h, M, N, u, midpoint);
+	MidPoint(h, M, midpoint);
+	IniMatrix(M, N, u);
+	InitialConditions(h, M, N, u, midpoint);
 }
 //public function/s
 void ParDiffEq1Euler::Euler()
@@ -24,7 +24,7 @@ void ParDiffEq1Euler::Euler()
 
 	std::string save_file_name{ "Results/Eq1/Euler_Eq_1_h_" + std::to_string(h) + "_k_" + std::to_string(k) + ".csv" };
 
-	class Save(h, k, M, N, u, save_file_name);
+	Save(h, k, M, N, u, save_file_name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,11 +33,11 @@ void ParDiffEq1Euler::Euler()
 ParDiffEq1RK2::ParDiffEq1RK2(double h, double k)
 	: h(h), k(k)
 {
-	class MidPoint(h, M, midpoint);
-	class IniMatrix(M, N, u);
-	class IniMatrix(M, N, v);
-	class InitialConditions(h, M, N, u, midpoint);
-	class InitialConditions(h, M, N, v, midpoint);
+	MidPoint(h, M, midpoint);
+	IniMatrix(M, N, u);
+	IniMatrix(M, N, v);
+	InitialConditions(h, M, N, u, midpoint);
+	InitialConditions(h, M, N, v, midpoint);
 }
 //public function/s
 void ParDiffEq1RK2::RK2()
@@ -59,5 +59,5 @@ void ParDiffEq1RK2::RK2()
 
 	std::string save_file_name{ "Results/Eq1/RK2_Eq_1_h_" + std::to_string(h) + "_k_" + std::to_string(k) + ".csv" };
 
-	class Save(h, k, M, N, u, save_file_name);
+	Save(h, k, M, N, u, save_file_name);
 }

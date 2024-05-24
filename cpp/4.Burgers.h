@@ -37,8 +37,8 @@ private:
 	std::vector<std::vector<double>> v{};
 
 	double beta;
-	double h;
-	double k;
+	const double h;
+	const double k;
 };
 
 class ParDiffEqBurgersImplicit
@@ -49,12 +49,15 @@ public:
 	//public function/s
 	void Implicit();
 private:
+	//private function/s
+	void SetVectorb(const size_t column);
 	//private variable/s
 	double midpoint{};
 	const size_t M{ 101 };
 	std::vector<std::vector<double>> u{};
+	std::vector<double> b{};
 
 	double beta;
-	double h;
-	double k;
+	const double h;
+	const double k;
 };
