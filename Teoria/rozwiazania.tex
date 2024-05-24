@@ -1,0 +1,109 @@
+\documentclass[12pt, a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage{polski}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{multicol}
+\usepackage{graphicx}
+\setlength{\voffset}{-0.75in}
+\setlength{\headsep}{5pt}
+\setlength{\hoffset}{-40pt}
+\setlength{\textwidth}{500pt}
+\setlength{\textheight}{770pt}
+\setlength{\parindent}{0em}
+
+\begin{document}
+
+\begin{center}
+\large{Sprawozdanie programu Burgers Equation 2024}
+\end{center}
+
+$u_{i,j}=u(x_{i},t_{j})=u(i\cdot h,j\cdot k)$\\
+$h=0.1, k=0.005$\\
+Warunek początkowy: $u_{0,j}=u_{M-1,j}=0\\
+\hspace*{4.1cm} u_{i,0}=e^{-(x_{i}-x_{mid})^{2}}$
+
+\begin{center}
+\large{Równania}
+\end{center}
+\begin{enumerate}
+\item $\frac{\partial u}{\partial t}+\frac{\partial u}{\partial x}=0$
+\item $\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}=0$
+\item $\frac{\partial u}{\partial t}-\beta\frac{\partial^{2} u}{\partial x^{2}}=0$
+\item $\frac{\partial u}{\partial t}+u\frac{\partial u}{\partial x}-\beta\frac{\partial^{2} u}{\partial x^{2}}=0$ (Równanie Burgers'a)
+\end{enumerate}
+
+\begin{center}
+\large{Metoda Eulera}
+\end{center}
+
+\begin{enumerate}
+\item$\frac{1}{k}(u_{i,j+1}-u_{i,j})+\frac{1}{2h}(u_{i+1,j}-u_{i-1,j})=0$\\\\
+$u_{i,j+1}=u_{i,j}-\frac{k}{2h}(u_{i+1,j}-u_{i-1,j})$
+
+\item$\frac{1}{k}(u_{i,j+1}-u_{i,j})+\frac{1}{4h}(u_{i+1,j}^{2}-u_{i-1,j}^{2})=0$\\\\
+$u_{i,j+1}=u_{i,j}-\frac{k}{4h}(u_{i+1,j}^{2}-u_{i-1,j}^{2})$
+
+\item$\frac{1}{k}(u_{i,j+1}-u_{i,j})-\frac{\beta}{h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})=0$\\\\
+$u_{i,j+1}=u_{i,j}+\frac{\beta k}{h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})$
+
+\item$\frac{1}{k}(u_{i,j+1}-u_{i,j})+\frac{1}{4h}(u_{i+1,j}^{2}-u_{i-1,j}^{2})-\frac{\beta}{h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})=0$\\\\
+$u_{i,j+1}=u_{i,j}-\frac{k}{4h}(u_{i+1,j}^{2}-u_{i-1,j}^{2})+\frac{\beta k}{h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})$
+\end{enumerate}
+
+\begin{center}
+\large{Metoda Rungego-Kutty 2-go rzędu}
+\end{center}
+
+\begin{enumerate}
+\item$v_{i,j+1}=u_{i,j}-\frac{k}{4h}(u_{i+1,j}-u_{i-1,j})$\\\\
+$u_{i,j+1}=u_{i,j}-\frac{k}{2h}(v_{i+1,j+1}-v_{i-1,j+1})$
+
+\item$v_{i,j+1}=u_{i,j}-\frac{k}{8h}(u_{i+1,j}^{2}-u_{i-1,j}^{2})$\\\\
+$u_{i,j+1}=u_{i,j}-\frac{k}{4h}(v_{i+1,j+1}^{2}-v_{i-1,j+1}^{2})$
+
+\item$v_{i,j+1}=u_{i,j}+\frac{\beta k}{2h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})$\\\\
+$u_{i,j+1}=u_{i,j}+\frac{\beta k}{h^{2}}(v_{i+1,j+1}-2v_{i,j+1}+v_{i-1,j+1})$
+
+\item$v_{i,j+1}=u_{i,j}-\frac{k}{8h}(u_{i+1,j}^{2}-u_{i-1,j}^{2})+\frac{\beta k}{2h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})$\\\\
+$u_{i,j+1}=u_{i,j}-\frac{k}{4h}(v_{i+1,j+1}^{2}-v_{i-1,j+1}^{2})+\frac{\beta k}{h^{2}}(v_{i+1,j+1}-2v_{i,j+1}+v_{i-1,j+1})$
+\end{enumerate}
+
+\newpage
+
+\begin{center}
+\large{Metoda Niejawna}
+\end{center}
+
+\begin{enumerate}
+ \setcounter{enumi}{2}
+
+\item$\frac{1}{k}(u_{i,j}-u_{i,j-1})-\frac{\beta}{h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})=0$\\\\
+$u_{i,j-1}=-\frac{\beta k}{h^{2}}u_{i-1,j}+(1+2\frac{\beta k}{h^{2}})u_{i,j}-\frac{\beta k}{h^{2}}u_{i+1,j}$\\\\
+$A=
+\begin{bmatrix}
+1+2s & -s & 0 & \cdots & 0\\
+-s & 1+2s & -s & \cdots & 0\\
+0 & -s & 1+2s & \cdots & 0\\
+\cdots & \cdots & \cdots & \cdots & \cdots\\
+0 & 0 & 0 & \cdots & 1+2s\\
+\end{bmatrix}$
+$,s=\frac{\beta k}{h^{2}}$\\\\
+$u_{i,j}=A^{-1}u_{j-1}$
+
+\item$\frac{1}{k}(u_{i,j}-u_{i,j-1})+\frac{1}{4h}(u_{i+1,j-1}^{2}-u_{i-1,j-1}^{2})-\frac{\beta}{h^{2}}(u_{i+1,j}-2u_{i,j}+u_{i-1,j})=0$\\\\
+$u_{i,j-1}-\frac{k}{4h}(u_{i+1,j-1}^{2}-u_{i-1,j-1}^{2})=-\frac{\beta k}{h^{2}}u_{i-1,j}+(1+2\frac{\beta k}{h^{2}})u_{i,j}-\frac{\beta k}{h^{2}}u_{i+1,j}$\\\\
+$A=
+\begin{bmatrix}
+1+2s & -s & 0 & \cdots & 0\\
+-s & 1+2s & -s & \cdots & 0\\
+0 & -s & 1+2s & \cdots & 0\\
+\cdots & \cdots & \cdots & \cdots & \cdots\\
+0 & 0 & 0 & \cdots & 1+2s\\
+\end{bmatrix}$
+$,s=\frac{\beta k}{h^{2}}$\\\\
+$u_{i,j}=A^{-1}(u_{i,j-1}-\frac{k}{4h}(u_{i+1,j-1}^{2}-u_{i-1,j-1}^{2}))$
+\end{enumerate}
+
+\end{document}
