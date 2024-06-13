@@ -1,0 +1,105 @@
+\documentclass[a4paper,12pt]{article}
+
+% Ustawienia polskich znaków i kodowania
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+
+% Ustawienia marginesów
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+% Pakiety dodatkowe
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% Tytuł, autor, data
+\title{Numeryczne wyznaczanie rozwiązań równania Burgersa przy pomocy metody różnic skończonych}
+\author{Konrad Bonicki, Tomasz Orzechowski, Maciej Pestka}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+
+
+\section{Wprowadzenie}
+W tej pracy przybliżę równanie Burgersa oraz jego zastosowania, jego rozwiązanie analityczne i metody, które użyliśmy podczas pisania programu, który numerycznie wyznacza rozwiązania przytoczonego równania.
+
+\section{Równanie Burgersa}
+Równanie Burgersa w ogólnej postaci jest fundamentalnym, nieliniowym, parabolicznym równaniem różniczkowym cząstkowym drugiego rzędu występującym w przeróżnych obszarach zastosowań matematyki, takich jak mechanika płynów, dynamika gazów oraz płynność ruchu:
+     \begin{equation}
+\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = v \frac{\partial ^2 u}{\partial x^2}
+\end{equation}
+gdzie: \\ t - zmienna niezależna zwykle interpretowana jako czas, \\ x - zmienna niezależna zwykle interpretowana jako położenie, \\ u(x,t) - zmienna zależna zwykle interpretowana jako prędkość płynu, \\ v - stały parametr, zwykle interpretowany jako lepkość płynu
+
+\section{Transformacja Hopf-Cole'a}
+$$u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}$$
+$$u=-2v\frac{\theta _x}{\theta}$$
+	$$u_x=-2v\frac{\theta _{xx} \theta - \theta ^{2}_{x}}{\theta ^2}, \quad u_t=-2v\frac{\theta _{xt}\theta - \theta _x \theta _t}{\theta ^2}$$
+	$$u_{xx}=-2v\frac{\theta _{xxx}\theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x}}{\theta ^3}$$
+	$$u_t + u u_x = v u_{xx}$$
+$$-2v \frac{\theta _{xt}\theta - \theta _x \theta _t }{\theta ^2} + 4 v^2 \frac{\theta \theta _x \theta _{xx} - \theta ^{3}_{x}}{\theta ^3} = -2v^2\frac{\theta _{xxx} \theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x}}{\theta ^3}$$
+$$-2v\theta (\theta _{xt} \theta - \theta _x \theta _t ) +4v^2 (\theta \theta _x \theta _{xx} - \theta ^{3}_{x}) = -2v^2(\theta _{xxx} \theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x})$$
+$$\theta ^2 \theta _{xt} - \theta \theta _x \theta _t -2v \theta \theta _x \theta _{xx} +2\theta^{3}_{x}=v \theta _{xxx} \theta ^2 -3v\theta \theta _x \theta _{xx} +2 \theta ^{3}_{x}$$
+$$\theta \theta _{xt} - \theta _x \theta _t -2v\theta _x \theta _{xx}= v\theta \theta _{xxx} - 3v\theta _x \theta _{xx}$$
+$$\theta \theta _{xt} - \theta _x \theta _t = v(\theta \theta _{xxx} - \theta _x \theta _{xx})$$
+$$\theta \frac{\partial 
+\theta ^2}{\partial x \partial t}- \frac{\partial \theta}{\partial x} \frac{\partial \theta}{\partial t} = v(\theta \frac{\partial ^3 \theta}{\partial x^3}-\frac{\partial \theta}{\partial x}\frac{\partial ^2 \theta}{\partial x^2})$$
+$$\frac{\partial \theta}{\partial t}(\theta \frac{\partial \theta}{\partial x}-\frac{\partial \theta}{\partial x})=v\frac{\partial ^2 \theta}{\partial x^2}(\theta \frac{\partial \theta}{\partial x}-\frac{\partial \theta}{\partial x})$$
+$$\theta \theta _x - \theta _x \neq 0$$
+$$ \theta _t = v \theta _{xx}$$
+Po podstawieniu transformacji Hopf-Cole'a do równania Burgersa otrzymaliśmy równanie ciepła.
+
+\section{Rozwiązanie analityczne przy pomocy transformacji Hopf-Cole'a}
+Równanie Burgersa: $$u_t +uu_x=vu_{xx}$$
+Warunek początkowy: $$u(x,0)=\sin (\pi x), \quad 0<x<1,$$ Warunki brzegowe: $$u(0,t)=u(1,t)=0, \quad t>0. $$ Transformacja Hopf-Cole'a: $$u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}$$ Z równania Burgersa z poprzedniego punktu mamy: $$ \theta _t = v \theta _{xx}, \quad 0<x<1 \quad t>0$$
+Warunek początkowy $\theta :$
+$$u(x,0)=-2v\frac{\theta _x (x,0)}{\theta (x,0)}, \quad \theta (x,0) \neq 0$$
+$$\sin (\pi x) = -2v\frac{\theta _x (x,0)}{\theta (x,0)}$$
+$$-\frac{1}{2v}\sin (\pi x)=\frac{\theta _x (x,0)}{\theta (x,0)}$$
+$$-\frac{1}{2v} \int^x_0 \sin (\pi x)dx = \int^x_0 \frac{\theta _x (x,0)}{\theta (x,0)}dx $$
+$$-\frac{1}{2v} [-\frac{1}{\pi}\cos (\pi x)]^{x=x}_0=[ln[\theta (x,0)]]^{x=x}_0$$
+$$\frac{1}{2v\pi}(\cos (\pi x)-1)=ln[\theta (x,0)]-ln[\theta (0,0)]$$
+Wyznaczamy $\theta (0,0)$:
+$$u(0,0)=-2v\frac{\theta _x (0,0)}{\theta (0,0)}$$
+$$u(0,0)=\sin (\pi 0)=0$$
+$$0=\frac{\theta _x (0,0)}{\theta (0,0)}$$
+$$\int^x_0 0 dx = \int^x_0 \frac{\theta _x (0,0)}{\theta (0,0)} dx$$
+$$ln(\theta(0,0))=0$$
+$$\theta (0,0) = e^0=1$$
+Co daje:
+$$\theta (x,0)= e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}, \quad 0<x<1$$
+Warunki brzegowe $\theta:$
+$$u(0,t)=u(1,t)=0$$
+$$-2v\frac{\theta _x (0,t)}{\theta (0,t)}=-2v\frac{\theta _x (1,t)}{\theta (1,t)}=0,\quad \theta (0,t)\neq 0 \quad \theta (1,t) \neq 0$$
+$$\theta _x (0,t) = \theta _x (1,t) =0, \quad t>0$$
+Rozwiązanie: $$\theta _t = v \theta _{xx}, \quad 0<x<1 \quad t>0$$
+Do rozwiązania tego równania wykorzystam metodę Fouriera:
+$$\theta (x,t)=X(x)T(t)$$
+$$X(x)T`(t)=vX``(x)T(t)$$
+$$\frac{T`(t)}{vT(t)}=\frac{X``(x)}{X(x)}=-\lambda ^2$$
+$$T`(t)=-\lambda ^2 vT(t)$$
+$$T(t)=e^{-\lambda ^2 vt}$$
+$$X``(x)=-\lambda ^2X(x)$$
+$$X(x)=A\sin(\lambda x)+B\cos(\lambda x)$$
+$$\theta (x,t) = (A\sin(\lambda x)+B\cos(\lambda x))e^{-\lambda ^2 vt}$$
+$$\theta _x (x,t)=(A\cos(\lambda x)-B\sin(\lambda x))e^{-\lambda ^2 vt}$$
+$$\theta _x (0,t)=0$$
+$$(A\cos(\lambda 0)-B\sin(\lambda 0))e^{-\lambda ^2 vt}=0$$
+$$Ae^{-\lambda ^2 vt}=0 <=> A =0$$
+$$\theta _x (1,t)=0$$
+$$(-B\sin(\lambda))e^{-\lambda ^2 vt}=0$$
+Funkcja sinus przyjmuje wartości 0 dla $\lambda=n\pi,\quad n=0,1,2,...$, omijamy rozwiązanie trywialne $B=0$:
+$$\frac{\partial \theta _n}{\partial x} (x,t) = \sum_{n=0}^{\infty}-B_n \sin (n\pi x) e^{-n^2 \pi ^2 vt} $$
+Wracamy z wyznaczonymi współczynnikami do momentu przed różniczkowaniem funkcji $\theta$:
+$$\theta _n (x,t) =B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}$$
+Wyznaczamy współczynniki $B_n\quad (n=0,1,2,...)$:
+$$B_0 = \int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}dx 
+=e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}dx$$
+
+
+
+\end{document}
