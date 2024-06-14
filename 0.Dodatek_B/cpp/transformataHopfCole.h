@@ -12,16 +12,17 @@ using namespace std;
 #ifndef M_E
 #define M_E 2.71828182845904523536
 #endif
-class transformata {
+
+class transformataHopfCole {
+
 	const int N = 11;      // liczba punktów siatki
-	const double k = 0.005, h = 0.1;
+	const double k = 0.0001, h = 0.0025;
 	const double n = ((0.5 * pow(h, 2)) / k) - 0.01;
-	const double r = n*k / pow(h, 2);
+	const double r = n * k / pow(h, 2);
 	double t = 0;
 
 	vector<double>theta;
 	vector<double>mu;
-	vector<double> inicjacja_u(); //wzror 4 z pracy
 	vector<double>inicjacjaThetaX0(); //wzor 8 z pracy
 	vector<double>liczenieThetaOdCzasu();
 
