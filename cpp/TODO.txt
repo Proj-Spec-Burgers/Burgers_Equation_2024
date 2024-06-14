@@ -1,2 +1,0 @@
-1. Napisać klasę do tworzenia wykresów (przyjmuje pliki .csv i tworzy .png/.jpg)
-2. Napisac transf. Hopf-Cole.
