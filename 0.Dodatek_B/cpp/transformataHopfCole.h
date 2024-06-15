@@ -16,7 +16,7 @@ using namespace std;
 class transformataHopfCole {
 
 	const int N = 11;      // liczba punktów siatki
-	const double k = 0.0001, h = 0.0025;
+	const double k = 0.1, h = 0.005;
 	const double n = ((0.5 * pow(h, 2)) / k) - 0.01;
 	const double r = n * k / pow(h, 2);
 	double t = 0;
