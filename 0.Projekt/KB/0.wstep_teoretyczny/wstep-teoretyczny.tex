@@ -1,20 +1,23 @@
 \documentclass[a4paper,12pt]{article}
 
-% Ustawienia polskich znaków i kodowania
+
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[polish]{babel}
 
-% Ustawienia marginesów
 \usepackage{geometry}
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
 
-% Pakiety dodatkowe
+
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
 
-% Tytuł, autor, data
+\newtheorem{theorem}{Twierdzenie}
+
+
 \title{Numeryczne wyznaczanie rozwiązań równania Burgersa przy pomocy metody różnic skończonych}
 \author{Konrad Bonicki, Tomasz Orzechowski, Maciej Pestka}
 \date{\today}
@@ -23,17 +26,24 @@
 
 \maketitle
 
-
+\tableofcontents
+\newpage
 
 \section{Wprowadzenie}
-W tej pracy przybliżę równanie Burgersa oraz jego zastosowania, jego rozwiązanie analityczne i metody, które użyliśmy podczas pisania programu, który numerycznie wyznacza rozwiązania przytoczonego równania.
+W tej pracy przybliżymy równanie Burgersa oraz jego zastosowania, jego rozwiązanie analityczne i metody, które użyliśmy podczas pisania programu, który numerycznie wyznacza rozwiązania przytoczonego równania.
 
 \section{Równanie Burgersa}
 Równanie Burgersa w ogólnej postaci jest fundamentalnym, nieliniowym, parabolicznym równaniem różniczkowym cząstkowym drugiego rzędu występującym w przeróżnych obszarach zastosowań matematyki, takich jak mechanika płynów, dynamika gazów oraz płynność ruchu:
-     \begin{equation}
+\begin{equation}
 \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = v \frac{\partial ^2 u}{\partial x^2}
 \end{equation}
-gdzie: \\ t - zmienna niezależna zwykle interpretowana jako czas, \\ x - zmienna niezależna zwykle interpretowana jako położenie, \\ u(x,t) - zmienna zależna zwykle interpretowana jako prędkość płynu, \\ v - stały parametr, zwykle interpretowany jako lepkość płynu
+gdzie: 
+\begin{itemize}
+\item $t$ - zmienna niezależna zwykle interpretowana jako czas,
+\item $x$ - zmienna niezależna zwykle interpretowana jako położenie,
+\item $u(x,t)$ - zmienna zależna zwykle interpretowana jako prędkość płynu,
+\item $v$ - stały parametr, zwykle interpretowany jako lepkość płynu.
+\end{itemize}
 
 \section{Transformacja Hopf-Cole'a}
 $$u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}$$
@@ -93,13 +103,71 @@ $$Ae^{-\lambda ^2 vt}=0 <=> A =0$$
 $$\theta _x (1,t)=0$$
 $$(-B\sin(\lambda))e^{-\lambda ^2 vt}=0$$
 Funkcja sinus przyjmuje wartości 0 dla $\lambda=n\pi,\quad n=0,1,2,...$, omijamy rozwiązanie trywialne $B=0$:
-$$\frac{\partial \theta _n}{\partial x} (x,t) = \sum_{n=0}^{\infty}-B_n \sin (n\pi x) e^{-n^2 \pi ^2 vt} $$
+\\
+\\
 Wracamy z wyznaczonymi współczynnikami do momentu przed różniczkowaniem funkcji $\theta$:
-$$\theta _n (x,t) =B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}$$
+$$\theta  (x,t) =B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}$$
 Wyznaczamy współczynniki $B_n\quad (n=0,1,2,...)$:
 $$B_0 = \int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}dx 
 =e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}dx$$
+$$B_n = 2\int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}\cos (n \pi x)dx=2e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)dx$$
+Rozwiązanie:
+$$u (x,t) = 2v\pi \frac{\sum_{n=1}^\infty 2e^{-\frac{1}{2v\pi}}\int_0^1 [e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)]dx \sin (n\pi x) e^{-n^2 \pi ^2 vt}}{e^{-\frac{1}{2v\pi}}\int_0^1 [e^{\frac{\cos (\pi x)}{2v\pi}}]dx+ \sum_{n=1}^\infty 2e^{-\frac{1}{2v\pi}}\int_0^1 [e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)]dx \cos (n\pi x) e^{-n^2 \pi ^2 vt}}$$
 
 
+\section{Metody numeryczne - wstęp}
+Metod numerycznych używamy do rozwiązywania problemów matematycznych za pomocą operacji na liczbach. Metody numeryczne są wykorzystywane, gdy problem nie posiada rozwiązania analitycznego lub gdy takie rozwiązanie jest zbyt skomplikowane do zastosowania. W naszym projekcie korzystamy z metody różnic skończonych, metody Rungego-Kuty'ego oraz metody Eulera.
+
+\section{Wzór Taylora}
+Wzór Taylora jest ważnym narzędziem w analizie numerycznej:
+\begin{theorem}
+Jeśli $f \in C^n [a,b]$ i jeśli $f^{(n+1)}$ istnieje w przedziale otwartym $(a,b)$, to dla dowolnych punktów $c$ i $x$ z przedziału domkniętego $[a,b]$ mamy:
+\begin{equation}
+f(x)=\sum_{k=0}^n \frac{1}{k!}f^{(k)}(c)(x-c)^k + E_n (x),
+\end{equation}
+gdzie dla pewnego punktu $\xi$ leżącego między $c$ i $x$:
+\begin{equation}
+E_n (x) = \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-c)^{n+1}.
+\end{equation}
+\end{theorem}
+
+\section{Metoda różnic skończonych}
+Metoda różnic skończonych polega na przybliżaniu pochodnych za pomocą różnic skończonych. Zarówno dziedzina przestrzenna, jak i czasowa są dyskretyzowane, czyli dzielone na skończoną liczbę przedziałów, a wartości rozwiązania na końcach tych przedziałów są przybliżane przez rozwiązywanie równań algebraicznych zawierających różnice skończone i wartości z pobliskich punktów.
+
+Przybliżenie pierwszej pochodnej:
+\begin{equation}
+u'(x) \approx \frac{u(x+h) - u(x-h)}{2h}
+\end{equation}
+
+Przybliżenie drugiej pochodnej:
+\begin{equation}
+u''(x) \approx \frac{u(x+h) - 2u(x) + u(x-h)}{h^2}
+\end{equation}
+
+\section{Metoda Eulera}
+Metoda Eulera jest najprostszą metodą rozwiązywania równań różniczkowych zwyczajnych, opartą na wzorze Taylora. Opisuje ją wzór:
+\begin{equation}
+x(t+h) \approx x(t) + hf(t,x)
+\end{equation}
+Jej zaletą jest to, że nie trzeba różniczkować funkcji $f$, natomiast wadą jest konieczność wyboru bardzo małego kroku $h$.
+
+\section{Metoda Rungego-Kutty}
+Klasyczna metoda Rungego-Kutty (RK4) jest metodą rzędu czwartego:
+\begin{equation}
+y_{n+1} = y_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+\end{equation}
+\begin{equation}
+t_{n+1} = t_n + h
+\end{equation}
+dla $n=0,1,2,\ldots$, gdzie:
+\begin{align*}
+k_1 &= f(t_n, y_n), \\
+k_2 &= f(t_n + \frac{h}{2}, y_n + h\frac{k_1}{2}), \\
+k_3 &= f(t_n + \frac{h}{2}, y_n + h\frac{k_2}{2}), \\
+k_4 &= f(t_n + h, y_n + hk_3).
+\end{align*}
+
+\section{Podsumowanie}
+W tej pracy przybliżyliśmy równanie Burgersa oraz jego zastosowania, transformację Hopf-Cole'a, rozwiązanie analityczne oraz metody numeryczne, w tym metodę różnic skończonych, metodę Eulera oraz metodę Rungego-Kutty.
 
 \end{document}
