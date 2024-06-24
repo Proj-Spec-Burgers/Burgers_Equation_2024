@@ -46,10 +46,15 @@ gdzie:
 \end{itemize}
 
 \section{Transformacja Hopf-Cole'a}
-$$u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}$$
+Transformacja Cole-Hopf’a jest zmianą zmiennych, która umożliwia przekształcenie specjalnego rodzaju parabolicznych równań różniczkowych cząstkowych z nieliniowością kwadratową w liniowe równanie cieplne. Wygląda następująco:
+\begin{equation}
+u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}
+\end{equation}
 $$u=-2v\frac{\theta _x}{\theta}$$
+Liczymy pochodne cząstkowe z (2), aby podstawić je potem do równania Burgersa
 	$$u_x=-2v\frac{\theta _{xx} \theta - \theta ^{2}_{x}}{\theta ^2}, \quad u_t=-2v\frac{\theta _{xt}\theta - \theta _x \theta _t}{\theta ^2}$$
 	$$u_{xx}=-2v\frac{\theta _{xxx}\theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x}}{\theta ^3}$$
+	Podstawiamy teraz to co nam wyszło do równania Burgersa:
 	$$u_t + u u_x = v u_{xx}$$
 $$-2v \frac{\theta _{xt}\theta - \theta _x \theta _t }{\theta ^2} + 4 v^2 \frac{\theta \theta _x \theta _{xx} - \theta ^{3}_{x}}{\theta ^3} = -2v^2\frac{\theta _{xxx} \theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x}}{\theta ^3}$$
 $$-2v\theta (\theta _{xt} \theta - \theta _x \theta _t ) +4v^2 (\theta \theta _x \theta _{xx} - \theta ^{3}_{x}) = -2v^2(\theta _{xxx} \theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x})$$
@@ -112,7 +117,7 @@ $$B_0 = \int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}dx
 =e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}dx$$
 $$B_n = 2\int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}\cos (n \pi x)dx=2e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)dx$$
 Rozwiązanie:
-$$u (x,t) = 2v\pi \frac{\sum_{n=1}^\infty 2e^{-\frac{1}{2v\pi}}\int_0^1 [e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)]dx \sin (n\pi x) e^{-n^2 \pi ^2 vt}}{e^{-\frac{1}{2v\pi}}\int_0^1 [e^{\frac{\cos (\pi x)}{2v\pi}}]dx+ \sum_{n=1}^\infty 2e^{-\frac{1}{2v\pi}}\int_0^1 [e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)]dx \cos (n\pi x) e^{-n^2 \pi ^2 vt}}$$
+$$u (x,t) = 2v\pi \frac{\sum_{n=1}^\infty B_n \sin (n\pi x) e^{-n^2 \pi ^2 vt}}{B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}}$$
 
 
 \section{Metody numeryczne - wstęp}
@@ -134,15 +139,54 @@ E_n (x) = \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-c)^{n+1}.
 \section{Metoda różnic skończonych}
 Metoda różnic skończonych polega na przybliżaniu pochodnych za pomocą różnic skończonych. Zarówno dziedzina przestrzenna, jak i czasowa są dyskretyzowane, czyli dzielone na skończoną liczbę przedziałów, a wartości rozwiązania na końcach tych przedziałów są przybliżane przez rozwiązywanie równań algebraicznych zawierających różnice skończone i wartości z pobliskich punktów.
 
+Wyznaczanie ilorazów różnicowych przy pomocy wzoru Taylora:
+
+\begin{align*}
+    u(x+h) &= u(x) + u'(x) \frac{(h)}{1!} + u''(x) \frac{(h-x)}{2!} + O(h^2) \\
+    u(x) &= u(x) \\
+    u(x-h) &= u(x) - u'(x) \frac{(h)}{1!} + u''(x) \frac{(-h-x)}{2!} + O(h^2)
+\end{align*}
+
 Przybliżenie pierwszej pochodnej:
-\begin{equation}
-u'(x) \approx \frac{u(x+h) - u(x-h)}{2h}
-\end{equation}
+
+\begin{align*}
+    u'(x) &= Au(x+h) + Bu(x) + Cu(x-h) \\
+    &= A(u(x) + hu'(x) + \frac{1}{2} u''(x)h^2) + B u(x) + C(u(x) - hu'(x) + \frac{1}{2} u''(x)h^2)
+\end{align*}
+
+\begin{align*}
+    u(x) &: \quad A + B + C = 0 \\
+    u'(x) &: \quad A h - Ch = 1 \\
+    u''(x) &: \quad \frac{1}{2} h^2 A + \frac{1}{2} h^2 C = 0
+\end{align*}
+
+\begin{align*}
+    A = \frac{1}{2h}, \quad B = 0, \quad C = -\frac{1}{2h}
+\end{align*}
+
+\begin{align*}
+    u'(x) \approx \frac{1}{2h} u(x+h) + 0u(x) - \frac{1}{2h} u(x-h) = \frac{u(x+h) - u(x-h)}{2h}
+\end{align*}
 
 Przybliżenie drugiej pochodnej:
-\begin{equation}
-u''(x) \approx \frac{u(x+h) - 2u(x) + u(x-h)}{h^2}
-\end{equation}
+
+\begin{align*}
+    u''(x) = A u(x+h) + B u(x) + C u(x-h)
+\end{align*}
+
+\begin{align*}
+    u(x) &: \quad A + B + C = 0 \\
+    u'(x) &: \quad A h - Ch = 0 \\
+    u''(x) &: \quad \frac{1}{2} h^2 A + \frac{1}{2} h^2 C = 1
+\end{align*}
+
+\begin{align*}
+    A = \frac{1}{h^2}, \quad B = -\frac{2}{h^2}, \quad C = \frac{1}{h^2}
+\end{align*}
+
+\begin{align*}
+    u''(x) \approx \frac{1}{h^2} u(x+h) - \frac{2}{h^2} u(x) + \frac{1}{h^2} u(x-h) = \frac{u(x+h) - 2u(x) + u(x-h)}{h^2}
+\end{align*}
 
 \section{Metoda Eulera}
 Metoda Eulera jest najprostszą metodą rozwiązywania równań różniczkowych zwyczajnych, opartą na wzorze Taylora. Opisuje ją wzór:
@@ -152,20 +196,38 @@ x(t+h) \approx x(t) + hf(t,x)
 Jej zaletą jest to, że nie trzeba różniczkować funkcji $f$, natomiast wadą jest konieczność wyboru bardzo małego kroku $h$.
 
 \section{Metoda Rungego-Kutty}
-Klasyczna metoda Rungego-Kutty (RK4) jest metodą rzędu czwartego:
+Rozważmy ogólne równanie różniczkowe zwyczajne pierwszego rzędu:
 \begin{equation}
-y_{n+1} = y_n + \frac{h}{6}(k_1 + 2k_2 + 2k_3 + k_4)
+    y' = f(t, y)
 \end{equation}
-\begin{equation}
-t_{n+1} = t_n + h
-\end{equation}
-dla $n=0,1,2,\ldots$, gdzie:
-\begin{align*}
-k_1 &= f(t_n, y_n), \\
-k_2 &= f(t_n + \frac{h}{2}, y_n + h\frac{k_1}{2}), \\
-k_3 &= f(t_n + \frac{h}{2}, y_n + h\frac{k_2}{2}), \\
-k_4 &= f(t_n + h, y_n + hk_3).
-\end{align*}
+z warunkiem początkowym \( y(t_0) = y_0 \).
+
+\subsection*{Algorytm}
+Metoda Rungego-Kutty drugiego stopnia jest jedną z metod numerycznych stosowanych do rozwiązywania równań różniczkowych zwyczajnych (ODE). Jest to rozwinięcie metody Eulera, które zwiększa dokładność przez uwzględnienie dodatkowych informacji o nachyleniu funkcji.
+\begin{enumerate}
+    \item \textbf{Krok początkowy:} 
+    \begin{equation}
+        y_0 = y(t_0)
+    \end{equation}
+
+    \item \textbf{Obliczenie przyrostów:}
+    \begin{equation}
+        k_1 = h f(t_n, y_n)
+    \end{equation}
+    \begin{equation}
+        k_2 = h f\left(t_n + \frac{h}{2}, y_n + \frac{k_1}{2}\right)
+    \end{equation}
+
+    \item \textbf{Obliczenie następnej wartości \( y \):}
+    \begin{equation}
+        y_{n+1} = y_n + k_2
+    \end{equation}
+
+    \item \textbf{Aktualizacja czasu:}
+    \begin{equation}
+        t_{n+1} = t_n + h
+    \end{equation}
+\end{enumerate}
 
 \section{Podsumowanie}
 W tej pracy przybliżyliśmy równanie Burgersa oraz jego zastosowania, transformację Hopf-Cole'a, rozwiązanie analityczne oraz metody numeryczne, w tym metodę różnic skończonych, metodę Eulera oraz metodę Rungego-Kutty.
