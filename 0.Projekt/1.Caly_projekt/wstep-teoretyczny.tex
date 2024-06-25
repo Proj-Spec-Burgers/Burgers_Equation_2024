@@ -1,0 +1,234 @@
+\documentclass[a4paper,12pt]{article}
+
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+
+\usepackage{geometry}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+
+\newtheorem{theorem}{Twierdzenie}
+
+
+\title{Numeryczne wyznaczanie rozwiązań równania Burgersa przy pomocy metody różnic skończonych}
+\author{Konrad Bonicki, Tomasz Orzechowski, Maciej Pestka}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\section{Wprowadzenie}
+W tej pracy przybliżymy równanie Burgersa oraz jego zastosowania, jego rozwiązanie analityczne i metody, które użyliśmy podczas pisania programu, który numerycznie wyznacza rozwiązania przytoczonego równania.
+
+\section{Równanie Burgersa}
+Równanie Burgersa w ogólnej postaci jest fundamentalnym, nieliniowym, parabolicznym równaniem różniczkowym cząstkowym drugiego rzędu występującym w przeróżnych obszarach zastosowań matematyki, takich jak mechanika płynów, dynamika gazów oraz płynność ruchu:
+\begin{equation}
+\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} = v \frac{\partial ^2 u}{\partial x^2}
+\end{equation}
+gdzie: 
+\begin{itemize}
+\item $t$ - zmienna niezależna zwykle interpretowana jako czas,
+\item $x$ - zmienna niezależna zwykle interpretowana jako położenie,
+\item $u(x,t)$ - zmienna zależna zwykle interpretowana jako prędkość płynu,
+\item $v$ - stały parametr, zwykle interpretowany jako lepkość płynu.
+\end{itemize}
+
+\section{Transformacja Hopf-Cole'a}
+Transformacja Cole-Hopf’a jest zmianą zmiennych, która umożliwia przekształcenie specjalnego rodzaju parabolicznych równań różniczkowych cząstkowych z nieliniowością kwadratową w liniowe równanie cieplne. Wygląda następująco:
+\begin{equation}
+u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}
+\end{equation}
+$$u=-2v\frac{\theta _x}{\theta}$$
+Liczymy pochodne cząstkowe z (2), aby podstawić je potem do równania Burgersa
+	$$u_x=-2v\frac{\theta _{xx} \theta - \theta ^{2}_{x}}{\theta ^2}, \quad u_t=-2v\frac{\theta _{xt}\theta - \theta _x \theta _t}{\theta ^2}$$
+	$$u_{xx}=-2v\frac{\theta _{xxx}\theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x}}{\theta ^3}$$
+	Podstawiamy teraz to co nam wyszło do równania Burgersa:
+	$$u_t + u u_x = v u_{xx}$$
+$$-2v \frac{\theta _{xt}\theta - \theta _x \theta _t }{\theta ^2} + 4 v^2 \frac{\theta \theta _x \theta _{xx} - \theta ^{3}_{x}}{\theta ^3} = -2v^2\frac{\theta _{xxx} \theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x}}{\theta ^3}$$
+$$-2v\theta (\theta _{xt} \theta - \theta _x \theta _t ) +4v^2 (\theta \theta _x \theta _{xx} - \theta ^{3}_{x}) = -2v^2(\theta _{xxx} \theta ^2 - 3\theta \theta _x \theta _{xx} + 2\theta ^{3}_{x})$$
+$$\theta ^2 \theta _{xt} - \theta \theta _x \theta _t -2v \theta \theta _x \theta _{xx} +2\theta^{3}_{x}=v \theta _{xxx} \theta ^2 -3v\theta \theta _x \theta _{xx} +2 \theta ^{3}_{x}$$
+$$\theta \theta _{xt} - \theta _x \theta _t -2v\theta _x \theta _{xx}= v\theta \theta _{xxx} - 3v\theta _x \theta _{xx}$$
+$$\theta \theta _{xt} - \theta _x \theta _t = v(\theta \theta _{xxx} - \theta _x \theta _{xx})$$
+$$\theta \frac{\partial 
+\theta ^2}{\partial x \partial t}- \frac{\partial \theta}{\partial x} \frac{\partial \theta}{\partial t} = v(\theta \frac{\partial ^3 \theta}{\partial x^3}-\frac{\partial \theta}{\partial x}\frac{\partial ^2 \theta}{\partial x^2})$$
+$$\frac{\partial \theta}{\partial t}(\theta \frac{\partial \theta}{\partial x}-\frac{\partial \theta}{\partial x})=v\frac{\partial ^2 \theta}{\partial x^2}(\theta \frac{\partial \theta}{\partial x}-\frac{\partial \theta}{\partial x})$$
+$$\theta \theta _x - \theta _x \neq 0$$
+$$ \theta _t = v \theta _{xx}$$
+Po podstawieniu transformacji Hopf-Cole'a do równania Burgersa otrzymaliśmy równanie ciepła.
+
+\section{Rozwiązanie analityczne przy pomocy transformacji Hopf-Cole'a}
+Równanie Burgersa: $$u_t +uu_x=vu_{xx}$$
+Warunek początkowy: $$u(x,0)=\sin (\pi x), \quad 0<x<1,$$ Warunki brzegowe: $$u(0,t)=u(1,t)=0, \quad t>0. $$ Transformacja Hopf-Cole'a: $$u(x,t)=-2v\frac{\theta _x (x,t)}{\theta (x,t)}$$ Z równania Burgersa z poprzedniego punktu mamy: $$ \theta _t = v \theta _{xx}, \quad 0<x<1 \quad t>0$$
+Warunek początkowy $\theta :$
+$$u(x,0)=-2v\frac{\theta _x (x,0)}{\theta (x,0)}, \quad \theta (x,0) \neq 0$$
+$$\sin (\pi x) = -2v\frac{\theta _x (x,0)}{\theta (x,0)}$$
+$$-\frac{1}{2v}\sin (\pi x)=\frac{\theta _x (x,0)}{\theta (x,0)}$$
+$$-\frac{1}{2v} \int^x_0 \sin (\pi x)dx = \int^x_0 \frac{\theta _x (x,0)}{\theta (x,0)}dx $$
+$$-\frac{1}{2v} [-\frac{1}{\pi}\cos (\pi x)]^{x=x}_0=[ln[\theta (x,0)]]^{x=x}_0$$
+$$\frac{1}{2v\pi}(\cos (\pi x)-1)=ln[\theta (x,0)]-ln[\theta (0,0)]$$
+Wyznaczamy $\theta (0,0)$:
+$$u(0,0)=-2v\frac{\theta _x (0,0)}{\theta (0,0)}$$
+$$u(0,0)=\sin (\pi 0)=0$$
+$$0=\frac{\theta _x (0,0)}{\theta (0,0)}$$
+$$\int^x_0 0 dx = \int^x_0 \frac{\theta _x (0,0)}{\theta (0,0)} dx$$
+$$ln(\theta(0,0))=0$$
+$$\theta (0,0) = e^0=1$$
+Co daje:
+$$\theta (x,0)= e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}, \quad 0<x<1$$
+Warunki brzegowe $\theta:$
+$$u(0,t)=u(1,t)=0$$
+$$-2v\frac{\theta _x (0,t)}{\theta (0,t)}=-2v\frac{\theta _x (1,t)}{\theta (1,t)}=0,\quad \theta (0,t)\neq 0 \quad \theta (1,t) \neq 0$$
+$$\theta _x (0,t) = \theta _x (1,t) =0, \quad t>0$$
+Rozwiązanie: $$\theta _t = v \theta _{xx}, \quad 0<x<1 \quad t>0$$
+Do rozwiązania tego równania wykorzystam metodę Fouriera:
+$$\theta (x,t)=X(x)T(t)$$
+$$X(x)T`(t)=vX``(x)T(t)$$
+$$\frac{T`(t)}{vT(t)}=\frac{X``(x)}{X(x)}=-\lambda ^2$$
+$$T`(t)=-\lambda ^2 vT(t)$$
+$$T(t)=e^{-\lambda ^2 vt}$$
+$$X``(x)=-\lambda ^2X(x)$$
+$$X(x)=A\sin(\lambda x)+B\cos(\lambda x)$$
+$$\theta (x,t) = (A\sin(\lambda x)+B\cos(\lambda x))e^{-\lambda ^2 vt}$$
+$$\theta _x (x,t)=(A\cos(\lambda x)-B\sin(\lambda x))e^{-\lambda ^2 vt}$$
+$$\theta _x (0,t)=0$$
+$$(A\cos(\lambda 0)-B\sin(\lambda 0))e^{-\lambda ^2 vt}=0$$
+$$Ae^{-\lambda ^2 vt}=0 <=> A =0$$
+$$\theta _x (1,t)=0$$
+$$(-B\sin(\lambda))e^{-\lambda ^2 vt}=0$$
+Funkcja sinus przyjmuje wartości 0 dla $\lambda=n\pi,\quad n=0,1,2,...$, omijamy rozwiązanie zerowe $B=0$.
+\\ \\
+Rozwiązanie przedstawiamy jako szereg Fouriera: 
+$$\theta  (x,t) =B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}$$
+Wyznaczamy współczynniki $B_n\quad (n=0,1,2,...)$:
+$$B_0 = \int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}dx 
+=e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}dx$$
+$$B_n = 2\int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}\cos (n \pi x)dx=2e^{-\frac{1}{2v\pi}}\int_0^1 e^{\frac{\cos (\pi x)}{2v\pi}}\cos (n \pi x)dx$$
+Rozwiązanie:
+$$u (x,t) = 2v\pi \frac{\sum_{n=1}^\infty B_n \sin (n\pi x) e^{-n^2 \pi ^2 vt}}{B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}}$$
+
+
+\section{Metody numeryczne - wstęp}
+Metod numerycznych używamy do rozwiązywania problemów matematycznych za pomocą operacji na liczbach. Metody numeryczne są wykorzystywane, gdy problem nie posiada rozwiązania analitycznego lub gdy takie rozwiązanie jest zbyt skomplikowane do zastosowania. W naszym projekcie korzystamy z metody różnic skończonych, metody Rungego-Kuty'ego oraz metody Eulera.
+
+\section{Wzór Taylora}
+Wzór Taylora jest ważnym narzędziem w analizie numerycznej:
+\begin{theorem}
+Jeśli $f \in C^n [a,b]$ i jeśli $f^{(n+1)}$ istnieje w przedziale otwartym $(a,b)$, to dla dowolnych punktów $c$ i $x$ z przedziału domkniętego $[a,b]$ mamy:
+\begin{equation}
+f(x)=\sum_{k=0}^n \frac{1}{k!}f^{(k)}(c)(x-c)^k + E_n (x),
+\end{equation}
+gdzie dla pewnego punktu $\xi$ leżącego między $c$ i $x$:
+\begin{equation}
+E_n (x) = \frac{1}{(n+1)!}f^{(n+1)}(\xi)(x-c)^{n+1}.
+\end{equation}
+\end{theorem}
+
+\section{Metoda różnic skończonych}
+Metoda różnic skończonych polega na przybliżaniu pochodnych za pomocą różnic skończonych. Zarówno dziedzina przestrzenna, jak i czasowa są dyskretyzowane, czyli dzielone na skończoną liczbę przedziałów, a wartości rozwiązania na końcach tych przedziałów są przybliżane przez rozwiązywanie równań algebraicznych zawierających różnice skończone i wartości z pobliskich punktów.
+
+Wyznaczanie ilorazów różnicowych przy pomocy wzoru Taylora:
+
+\begin{align*}
+    u(x+h) &= u(x) + u'(x) \frac{h}{1!} + u''(x) \frac{(x+h-x)^2}{2!} + O(h^3) \\
+    u(x) &= u(x) \\
+    u(x-h) &= u(x) - u'(x) \frac{h}{1!} + u''(x) \frac{(x-h-x)^2}{2!} + O(h^3)
+\end{align*}
+
+Przybliżenie pierwszej pochodnej:
+
+\begin{align*}
+    u'(x) &= Au(x+h) + Bu(x) + Cu(x-h) \\
+    &= A(u(x) + hu'(x) + \frac{1}{2} u''(x)h^2) + B u(x) + C(u(x) - hu'(x) + \frac{1}{2} u''(x)h^2)
+\end{align*}
+
+\begin{align*}
+    u(x) &: \quad A + B + C = 0 \\
+    u'(x) &: \quad A h - Ch = 1 \\
+    u''(x) &: \quad \frac{1}{2} h^2 A + \frac{1}{2} h^2 C = 0
+\end{align*}
+
+\begin{align*}
+    A = \frac{1}{2h}, \quad B = 0, \quad C = -\frac{1}{2h}
+\end{align*}
+
+\begin{align*}
+    u'(x) \approx \frac{1}{2h} u(x+h) + 0u(x) - \frac{1}{2h} u(x-h) = \frac{u(x+h) - u(x-h)}{2h}
+\end{align*}
+
+Przybliżenie drugiej pochodnej:
+
+\begin{align*}
+    u''(x) = A u(x+h) + B u(x) + C u(x-h)
+\end{align*}
+
+\begin{align*}
+    u(x) &: \quad A + B + C = 0 \\
+    u'(x) &: \quad A h - Ch = 0 \\
+    u''(x) &: \quad \frac{1}{2} h^2 A + \frac{1}{2} h^2 C = 1
+\end{align*}
+
+\begin{align*}
+    A = \frac{1}{h^2}, \quad B = -\frac{2}{h^2}, \quad C = \frac{1}{h^2}
+\end{align*}
+
+\begin{align*}
+    u''(x) \approx \frac{1}{h^2} u(x+h) - \frac{2}{h^2} u(x) + \frac{1}{h^2} u(x-h) = \frac{u(x+h) - 2u(x) + u(x-h)}{h^2}
+\end{align*}
+
+\section{Metoda Eulera}
+Metoda Eulera jest najprostszą metodą rozwiązywania równań różniczkowych zwyczajnych, opartą na wzorze Taylora. Opisuje ją wzór:
+\begin{equation}
+x(t+h) \approx x(t) + hf(t,x)
+\end{equation}
+Jej zaletą jest to, że nie trzeba różniczkować funkcji $f$, natomiast wadą jest konieczność wyboru bardzo małego kroku $h$.
+
+\section{Metoda Rungego-Kutty}
+Rozważmy ogólne równanie różniczkowe zwyczajne pierwszego rzędu:
+\begin{equation}
+    y' = f(t, y)
+\end{equation}
+z warunkiem początkowym \( y(t_0) = y_0 \).
+
+\subsection*{Algorytm}
+Metoda Rungego-Kutty drugiego stopnia jest jedną z metod numerycznych stosowanych do rozwiązywania równań różniczkowych zwyczajnych (ODE). Jest to rozwinięcie metody Eulera, które zwiększa dokładność przez uwzględnienie dodatkowych informacji o nachyleniu funkcji.
+\begin{enumerate}
+    \item \textbf{Krok początkowy:} 
+    \begin{equation}
+        y_0 = y(t_0)
+    \end{equation}
+
+    \item \textbf{Obliczenie przyrostów:}
+    \begin{equation}
+        k_1 = h f(t_n, y_n)
+    \end{equation}
+    \begin{equation}
+        k_2 = h f\left(t_n + \frac{h}{2}, y_n + \frac{k_1}{2}\right)
+    \end{equation}
+
+    \item \textbf{Obliczenie następnej wartości \( y \):}
+    \begin{equation}
+        y_{n+1} = y_n + k_2
+    \end{equation}
+
+    \item \textbf{Aktualizacja czasu:}
+    \begin{equation}
+        t_{n+1} = t_n + h
+    \end{equation}
+\end{enumerate}
+
+\section{Podsumowanie}
+W tej pracy przybliżyliśmy równanie Burgersa oraz jego zastosowania, transformację Hopf-Cole'a, rozwiązanie analityczne oraz metody numeryczne, w tym metodę różnic skończonych, metodę Eulera oraz metodę Rungego-Kutty.
+
+\end{document}
