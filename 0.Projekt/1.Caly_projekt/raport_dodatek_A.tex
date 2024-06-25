@@ -15,7 +15,6 @@
 
 \begin{document}
 
-\section{Rozwiązanie równania Burgersa}
 Rozważamy cztery równania różniczkowe cząstkowe.\\
 
 Równanie transportu
@@ -87,7 +86,7 @@ dla równania transportu
 \begin{figure}[h]
 \caption{Równanie transportu, metoda Eulera}
 \centering
-\includegraphics[width=0.75\textwidth]{0}
+\includegraphics[width=0.75\textwidth]{0.png}
 \end{figure}
 
 dla nielepkiego równania Burgersa
@@ -100,7 +99,7 @@ dla nielepkiego równania Burgersa
 \begin{figure}[h]
 \caption{Nielepkie równanie Burgersa, metoda Eulera}
 \centering
-\includegraphics[width=0.75\textwidth]{1}
+\includegraphics[width=0.65\textwidth]{1.png}
 \end{figure}
 \newpage
 
@@ -114,7 +113,7 @@ dla równania ciepła
 \begin{figure}[h]
 \caption{Równanie ciepła, metoda Eulera}
 \centering
-\includegraphics[width=0.75\textwidth]{2}
+\includegraphics[width=0.65\textwidth]{2.png}
 \end{figure}
 
 dla równania Burgersa
@@ -127,7 +126,7 @@ dla równania Burgersa
 \begin{figure}[h]
 \caption{Równanie Burgersa, metoda Eulera}
 \centering
-\includegraphics[width=0.75\textwidth]{3}
+\includegraphics[width=0.65\textwidth]{3}
 \end{figure}
 \newpage
 
@@ -142,7 +141,7 @@ dla równania transportu
 \begin{figure}[h]
 \caption{Równanie transportu, metoda RK2}
 \centering
-\includegraphics[width=0.75\textwidth]{4}
+\includegraphics[width=0.65\textwidth]{4}
 \end{figure}
 
 dla nielepkiego równania Burgersa
@@ -155,7 +154,7 @@ dla nielepkiego równania Burgersa
 \begin{figure}[h]
 \caption{Nielepkie równanie Burgersa, metoda RK2}
 \centering
-\includegraphics[width=0.75\textwidth]{5}
+\includegraphics[width=0.65\textwidth]{5}
 \end{figure}
 \newpage
 \newpage
@@ -183,7 +182,7 @@ dla równania Burgersa
 \begin{figure}[h]
 \caption{Równanie Burgersa, metoda RK2}
 \centering
-\includegraphics[width=0.75\textwidth]{7}
+\includegraphics[width=0.65\textwidth]{7}
 \end{figure}
 
 \newpage
@@ -212,7 +211,7 @@ u_{i,j}=A^{-1}u_{i,j-1},
 \begin{figure}[h]
 \caption{Równanie ciepła, metoda niejawna}
 \centering
-\includegraphics[width=0.75\textwidth]{8}
+\includegraphics[width=0.65\textwidth]{8}
 \end{figure}
 \newpage
 
@@ -240,7 +239,7 @@ u_{i,j}=A^{-1}(u_{i,j-1}-\frac{k}{4h}(u_{i+1,j-1}^{2}-u_{i-1,j-1}^{2})).
 \begin{figure}[h]
 \caption{Równanie Burgersa, metoda niejawna}
 \centering
-\includegraphics[width=0.75\textwidth]{9}
+\includegraphics[width=0.65\textwidth]{9}
 \end{figure}
 \newline
 Algorytm, który realizuje opisaną metodę niejawną korzysta z procedury tri rozwiązującej układ równań o macierzy trójprzekątniowej. Metoda tri korzysta ze szczególnego przypadku eliminacji Gaussa w czasie $O(n)$, zamiast czasu $O(n^3)$ dla normalnego przypadku, co ogromnie przyspiesza znajdowanie rozwiązań. Mogliśmy zasotosować tę metodę ponieważ stałe wartości na głównej przekątnej były dodatnie oraz większe od wartości na górnej oraz dolnej przekątnej. 
@@ -262,7 +261,7 @@ Zwiększanie współczynnika $\beta$ powoduje zmniejszenie maksimum $u(x,t)$ dla
 \begin{figure}[h]
 \caption{Równanie Burgersa, metoda Eulera, $\beta$=1.3}
 \centering
-\includegraphics[width=0.85\textwidth]{10}
+\includegraphics[width=0.65\textwidth]{10}
 \end{figure}
 
 Program komputerowy w języku C++ wyznaczający powyższe rozwiązania został dołączony w Dodatku A.

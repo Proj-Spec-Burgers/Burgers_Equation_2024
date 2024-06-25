@@ -107,10 +107,9 @@ $$(A\cos(\lambda 0)-B\sin(\lambda 0))e^{-\lambda ^2 vt}=0$$
 $$Ae^{-\lambda ^2 vt}=0 <=> A =0$$
 $$\theta _x (1,t)=0$$
 $$(-B\sin(\lambda))e^{-\lambda ^2 vt}=0$$
-Funkcja sinus przyjmuje wartości 0 dla $\lambda=n\pi,\quad n=0,1,2,...$, omijamy rozwiązanie trywialne $B=0$:
-\\
-\\
-Wracamy z wyznaczonymi współczynnikami do momentu przed różniczkowaniem funkcji $\theta$:
+Funkcja sinus przyjmuje wartości 0 dla $\lambda=n\pi,\quad n=0,1,2,...$, omijamy rozwiązanie zerowe $B=0$.
+\\ \\
+Rozwiązanie przedstawiamy jako szereg Fouriera: 
 $$\theta  (x,t) =B_0+ \sum_{n=1}^\infty B_n \cos (n\pi x) e^{-n^2 \pi ^2 vt}$$
 Wyznaczamy współczynniki $B_n\quad (n=0,1,2,...)$:
 $$B_0 = \int_0^1 e^{\frac{1}{2v\pi}(\cos (\pi x)-1)}dx 
@@ -142,9 +141,9 @@ Metoda różnic skończonych polega na przybliżaniu pochodnych za pomocą róż
 Wyznaczanie ilorazów różnicowych przy pomocy wzoru Taylora:
 
 \begin{align*}
-    u(x+h) &= u(x) + u'(x) \frac{(h)}{1!} + u''(x) \frac{(h-x)}{2!} + O(h^2) \\
+    u(x+h) &= u(x) + u'(x) \frac{h}{1!} + u''(x) \frac{(x+h-x)^2}{2!} + O(h^3) \\
     u(x) &= u(x) \\
-    u(x-h) &= u(x) - u'(x) \frac{(h)}{1!} + u''(x) \frac{(-h-x)}{2!} + O(h^2)
+    u(x-h) &= u(x) - u'(x) \frac{h}{1!} + u''(x) \frac{(x-h-x)^2}{2!} + O(h^3)
 \end{align*}
 
 Przybliżenie pierwszej pochodnej:

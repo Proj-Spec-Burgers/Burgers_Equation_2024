@@ -1,21 +1,17 @@
-\documentclass[10pt, a4paper]{article}
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{polski}
-\usepackage{amsthm}
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{graphicx}
-\usepackage{listings}
-\usepackage{color}
 \usepackage{xcolor}
 \usepackage{geometry}
-\usepackage{fontspec}
-
-\setmainfont{Arial}
-
-\newgeometry{tmargin=2.5cm, bmargin=3.5cm, lmargin=2.5cm, lmargin=2.5cm }
+\usepackage{subfig}
+\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
+\usepackage{multicol}
+\usepackage{fancyhdr}
 \linespread{1.5}
 \colorlet{shadecolor}{gray!40}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage{pdfpages}
 \lstdefinestyle{mystyle}{
 	%backgroundcolor=\color{shadecolor}
 	commentstyle=\footnotesize\color{blue},
@@ -34,8 +30,29 @@
 \setlength{\parindent}{1.25cm}
 
 
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{tocloft}
+
 \begin{document}
-	\section{Opis programu}
+
+	\section{Opis programu transformaty Hopf Cole'a}
+Program komputerowy został napisany na podstawie wzorów~\ref{14a}:
+\begin{equation}
+\label{14a}
+\begin{split}
+    \theta_{i,j+1}=(1-2r)\theta_{i,j}+2r\theta_{i+1,j}, \ \ i=0\\
+    \theta_{i,j+1}=2r\theta_{i-1,j}+(1-2r)\theta_{i,j}+r\theta_{i+1,j}, \ \ 1\le i\le N-1\\
+    \theta_{i,j+1}=2r\theta_{i-1,j}+(1-2r)\theta_{i,j}
+\end{split}
+\end{equation}.
+Natomiast równanie na u zostało zrobione z wzoru:
+\begin{equation}
+    u(x_i,t_j)=-\frac{\beta}{h}\left(\frac{\theta_{i+1,j}-\theta_{i-1,j}}{\theta_{i,j}}\right)\ \ 1\le i\le N-1
+\end{equation}.
+Gdzie $\beta$ jest współczynnikiem lepkości, h krokiem przestrzennym, a k - krokiem czasowym.
 	\subsection{transformataHopfCole.h}
 	Plik nagłówkowy zawiera definicje metod klasy transformaty. Na początku zostały dołączone wszystkie klasy, które są potrzebne do działania programu, jak pokazuje listing~\ref{poczatekPlikuH}.
 		\begin{lstlisting}[caption={początek pliku transformataHopfCole.h},label={poczatekPlikuH}, language=C++]]
@@ -59,8 +76,8 @@
 	Potem została zdefiniowania klasa, w~której są wszystkie metody oraz stale potrzebnie do pracy programu.
 			\begin{lstlisting}[caption={klasa tranformataHopfCofe},label={klasa}, language=C++]
 			class transformataHopfCole {
-				const int N = 11;      // liczba punktów siatki
 				const double k = 0.005, h = 0.1;
+                const int N = 1 / h + 1;      // liczba punktów siatki
 				const double n = ((0.5 * pow(h, 2)) / k) - 0.01;
 				const double r = n*k / pow(h, 2);
 				double t = 0;
@@ -102,7 +119,7 @@
 vector<double> transformataHopfCole::liczenieThetaOdCzasu() {
 	vector<double>thetaDlaCzasu(N);
 	thetaDlaCzasu = theta;
-	for (int j = 1; j < 10; ++j) {
+	for (int j = 1; j < 3000; ++j) {
 		t = j * k;
 		vector<double>v(N);
 		v[0] = (1 - 2 * r) * thetaDlaCzasu[0] + 2 * r * thetaDlaCzasu[1]; //warunki brzegowe  
@@ -168,7 +185,7 @@ int main()
 Wygenerowano wykresy dla $k=0.0005$ i~$h=0.1$. Dla coraz większego czasu można zauważyć, że amplituda rozwiązana maleje, można to zauważyć na rys~\ref{fig:wykresy-dla-uxt}, wyniki punktów wykresu są przedstawione na tabelkach~\ref{tab1} i~\ref{tab2}.\\
 \begin{figure}
 	\centering
-	\includegraphics[width=0.7\linewidth]{"wykresy dla u(x,t)"}
+	\includegraphics[width=0.7\linewidth]{wykresy dla u(x,t).png}
 	\caption{k = 0.005, h = 0.1}
 	\label{fig:wykresy-dla-uxt}
 \end{figure}
@@ -210,131 +227,43 @@ x\textbackslash{}t & 0        & 0.005    & 0,010    & 0.015    & 0.020    & 0.02
 	\label{tab2}
 \end{table}
 Można zauważyć, że jak zmniejszymy k do 0.0005, to można zauważyć, że dla czasu 0 funkcja jest trójkąta. Natomiast dla większego czasu można zauważyć, że funkcja się powoli zaokrągla i~przypomina coraz bardziej wykres dla sinusa, można to zauważyć na rys~\ref{wyk2}. \\
-Dla $k = 0.05, h = 0.01$ wykres robi się trójkątny oraz niektóre wartości przyjmują wartości ujemne, lub przyjmuję wartości zero lub bliskie zeru. 
-\section{dodatek}
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\linewidth]{"wykresy dla u(x,t)2"}
-	\caption{k = 0.0005, h = 0.01}
-	\label{wyk2}
+Na pozostały wykresach~\ref{wyk11,wyk12,wyk13}, można zauważyć jak zmiana współczynników wpływa na generowanie wykresów. Jak zmienia się współczynnik lepkości to można zauważyć że amplituda zwiększa się lub zamieszcza, zależy od wartości. Natomiast gdy się zmienia krok przestrzeni to zmienia się ilość punktów na osi~x, a gdy ostatnią wartość się zmieni (krok czasowy), to powstaje więcej lub mniej rozwiązań $\theta$ od czasu.Na każdych z wykresów można zauważyć, że dla coraz większego czasu amplituda zamieszcza się oraz lekko przesuwa się w prawą stronę.\\
+Gdy warunek na stabilność, $k/h^2\le0.5$ jest nie zachowany to program wygeneruję wyniki, ale w pliku tekstowym pojawiają się wartości "ind", których nie można przeanalizować oraz naszkicować na wykresie tych punktów. Natomiast gdy zmienia się wartości lepkości, które są niezgodnie dla obliczeń. \\
+\begin{figure}[ht]
+    \centering
+    \subfloat[$\beta$=0.1, k=0.001, h=0.025]{%
+        \includegraphics[width=0.3\linewidth]{wykresy dla u(x,t) v=0,1 k = 0.001, h = 0.025.png}
+        \label{wyk11}
+    }
+    \hfill
+    \subfloat[$\beta$=0.1, k=0.005, h=0.1]{%
+        \includegraphics[width=0.3\linewidth]{wykresy dla u(x,t) v=0,1 k = 0.005, h = 0.1.png}
+        \label{wyk12}
+    }
+    \hfill
+    \subfloat[$\beta$=0.99, k=0.005, h=0.1]{%
+        \includegraphics[width=0.3\linewidth]{wykresy dla u(x,t) v=0,99 k = 0.005, h = 0.1.png}
+        \label{wyk13}
+    }
+    \caption{Wykresy dla rozwiązań transformaty}
+    \label{Wykresy dla rożwiązań}
 \end{figure}
-\subsection{transformata.cpp}
-\begin{lstlisting}[caption={transformata.cpp},label={transformataCalyKod}, language=C++]
-	#include "transformataHopfCole.h"
-	int main()
-	{
-		transformataHopfCole Burger;
-		Burger.wynikiKonczowe();
-	}
-\end{lstlisting}
-\subsection{transformataHopfCole.h}
-\begin{lstlisting}[caption={transformataHopfCole.h},label={transformataHopfCole.hCalyKod}, language=C++]
-#pragma once
-#include <vector>
-#include <cmath>
-#include <algorithm>
-#include <conio.h>
-#include <math.h>
-using namespace std;
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+Przedstawione na wykresach~\ref{fig:wykresy_dla_rozwiazan}, można zobaczyć, że dla większego czasu, że wykres coraz mniej przypomina wykres sinusa. Może wynikać to z błędach numerycznych, które z każdym rozwiązaniem gromadzą się i robią się coraz większe. Dla $beta=1$ dla trzeba więcej rozwiązań dla czasu niż jest przedstawione dla~\ref{wyk22}, podobnie jest dla wykresu~\ref{wyk21}, jeśli zastosuję się $beta=5$. Ponieważ te wartości są bardzo blisko \begin{equation*}
+\beta<\frac{h^2}{2k}
+\end{equation*}
+\begin{figure}[]
+    \centering
+    \subfloat[$\beta=10$, $k=0.00001$, $h=0.01$]{%
+        \includegraphics[width=0.45\linewidth]{zl.png}
+        \label{wyk21}
+    }
+    \hfill
+    \subfloat[$\beta=5$, $k=0.005$, $h=0.1$]{%
+        \includegraphics[width=0.45\linewidth]{zl1.png}
+        \label{wyk22}
+    }
+    \caption{Źle dobrane warunki}
+    \label{fig:wykresy_dla_rozwiazan}
+\end{figure}
 
-#ifndef M_E
-#define M_E 2.71828182845904523536
-#endif
-
-class transformataHopfCole {
-	
-	const int N = 11;      // liczba punktów siatki
-	const double k = 0.005, h = 0.1;
-	const double n = ((0.5 * pow(h, 2)) / k) - 0.01;
-	const double r = n * k / pow(h, 2);
-	double t = 0;
-	
-	vector<double>theta;
-	vector<double>mu;
-	vector<double>inicjacjaThetaX0(); //wzor 8 z pracy
-	vector<double>liczenieThetaOdCzasu();
-	
-	vector<double>liczenieMu(vector<double>newMu);//wzor 15
-	void zapisDoPliku(vector<double> Theta, double newT);
-	public:
-	void wynikiKonczowe();
-	
-};
-\end{lstlisting}
-\subsection{transformataHopfCole.cpp}
-\begin{lstlisting}[caption={transformataHopfCole.cpp},label={transformataHopfColeCalyKod.cpp}, language=C++]
-#include "transformataHopfCole.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-
-
-
-vector<double> transformataHopfCole::inicjacjaThetaX0() {
-	vector<double>newTheta;
-	for (int i = 0; i < N; ++i) {
-		double potega = (-1 / (2 * M_PI * n)) * (1 - cos(M_PI * (i * h)));
-		newTheta.push_back(exp(potega));
-	}
-	zapisDoPliku(liczenieMu(newTheta), 0);
-	return newTheta;
-}
-
-vector<double> transformataHopfCole::liczenieThetaOdCzasu() {
-	vector<double>thetaDlaCzasu(N);
-	thetaDlaCzasu = theta;
-	for (int j = 1; j < 10; ++j) {
-		t = j * k;
-		vector<double>v(N);
-		v[0] = (1 - 2 * r) * thetaDlaCzasu[0] + 2 * r * thetaDlaCzasu[1]; //warunki brzegowe  
-		v[N - 1] = 2 * r * thetaDlaCzasu[N - 2] + (1 - 2 * r) * thetaDlaCzasu[N - 1];
-		for (int i = 1; i < (N - 1); ++i) {
-			double wynik = r * thetaDlaCzasu[i - 1] + (1 - 2 * r) * thetaDlaCzasu[i] + r * thetaDlaCzasu[i + 1];
-			v[i] = wynik;
-		}
-		thetaDlaCzasu = v;
-		zapisDoPliku(liczenieMu(thetaDlaCzasu), t);
-		
-	}
-	return thetaDlaCzasu;
-}
-
-vector<double> transformataHopfCole::liczenieMu(vector<double> newMu) {
-	vector<double>newMu1(N);
-	newMu1[0] = 0;//warunek poczatkowy
-	newMu1[N - 1] = 0;//warunek koncowy
-	for (int i = 1; i < (N - 1); ++i) {
-		newMu1[i] = (-(n / h) * ((newMu[i + 1] - newMu[i - 1]) / newMu[i]));
-	}
-	
-	return newMu1;
-}
-
-void transformataHopfCole::zapisDoPliku(vector<double> newMu, double newT) {
-	string nazwaPliku = "Wyniki1DlaT" + to_string(newT) + ".txt";
-	std::ofstream plik(nazwaPliku);
-	
-	// Sprawdzamy, czy plik został otwarty poprawnie
-	if (!plik) {
-		std::cerr << "Nie można otworzyć pliku!" << std::endl;
-		return;
-	}
-	for (int i = 0; i < size(newMu); ++i) {
-		
-		plik << (i * h) << " " << newMu[i] << '\n';
-	}
-	
-	// Zamykamy plik
-	plik.close();
-}
-
-void transformataHopfCole::wynikiKonczowe() {
-	theta = inicjacjaThetaX0();
-	theta = liczenieThetaOdCzasu();
-}
-
-\end{lstlisting}
 \end{document}

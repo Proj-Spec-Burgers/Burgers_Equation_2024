@@ -16,20 +16,32 @@
 Celem pracy jest zapoznanie z równaniem Burgersa oraz jego zastosowaniami oraz wyznaczenie jego rozwiązań numerycznych. Zadanie polega na zaprojektowaniu, napisaniu i przetestowaniu programu służącego do obliczania rozwiązań równania Burgersa. 
 
 \section*{Opis projektu}
-
+Przedstawione i omówione zostały:
+\begin{itemize}
+\item Równanie Burgersa
+\item Transformacja Hopf-Cole’a
+\item Rozwiązanie analityczne przy pomocy transformacji Hopf-Cole’a
+\item Metoda różnic skończonych
+\item Metoda Eulera 
+\item Metoda Rungego-Kutty
+\item Rozwiązanie numeryczne równania Burgersa
+\item Rozwiązanie numeryczne transformaty Hopf-Cole’a
+\end{itemize}
 
 \section*{Wnioski}
-
+Rozwiązane zostały numerycznie RRC równania transportu, nielepkiego równania Burgersa, równania ciepła, równania Burgersa. Użyto metod Eulera, Rungego-Kutty drugiego rzędu dla wszystkich równań oraz metody niejawnej dla równania ciepła oraz równania Burgersa dla warunku początkowego $u_{x_{i},0}=e^{-(x-5)^{2}}$. Przedstawiono wyniki za pomocą wykresów dla różnych wartości czasów $t_{j}$ aby zobrazować jak działa liniowość/nieliniowość równań oraz jaki wpływ ma współczynnik $\beta$ lepkości na rozwiązanie. Pokazano efekt „fali uderzeniowej” nieliniowości oraz znalezionio przedział rzeczywisty $\beta$ w którym rozwiązanie przestaje być stabilne. Program wykonujący obliczenia napisano w języku C++.\\
+Wykonano analizę transformaty Hopf-Cole’a dla warunku początkowego $u(x_{i},0)=sin(\pi x_{i})$. Pokazano jak zachowuje się rozwiązanie dla różnego wyboru kroku przestrzennego $x_{i}$, kroku czasowego $t_{j}$ oraz różnych wartości $\beta$. Program wykonujący obliczenia napisano w języku C++.
 
 \section*{Podział pracy}
-Konrad Bonicki - wstęp teoretyczny \\ 
-Tomasz Orzechowski - \\
-Maciej Pestka - Pisane kodu do transformacja Hopf-Cole'a 
+Konrad Bonicki: wstęp teoretyczny. \\ 
+Tomasz Orzechowski: RRC transportu, nielepkiego Równania Burgersa, ciepła oraz równanie Burgersa - program w C++ oraz analiza wyników.\\
+Maciej Pestka: pisane kodu do transformacji Hopf-Cole'a.
 
 \begin{thebibliography}{9}
-\bibitem{1} S.Kutluay, A.R. Bahadir, A.Özdes, \textit{Numerical solution of one-dimensional Burgers equation: explicit and exact-explicit finite difference methods}
-\bibitem{2} David Kincaid, Ward Cheney,    \textit{ Analiza numeryczna}
-\bibitem{3}en.wikipedia.org/wiki/
+\bibitem{1} W. Rudin, \textit{„Podstawy analizy matematycznej”, PWN, Warszawa 2009.}
+\bibitem{2} David Kincaid, Ward Cheney,    \textit{ Analiza numeryczna, 2006}
+\bibitem{3} S.Kutluay, A.R. Bahadir, A.Özdes, \textit{Numerical solution of one-dimensional Burgers equation: explicit and exact-explicit finite difference methods, 1999}
+\bibitem{3} A. Salih, \textit{ Burgers’ Equation, 2016}
 \end{thebibliography}
 
 \end{document}
