@@ -12,8 +12,8 @@ public:
 private:
 	//private variable/s
 	double midpoint{};
-	const size_t M{ 101 };
-	const size_t N{ 1001 };
+	size_t M{};
+	size_t N{};
 	std::vector<std::vector<double>> u{};
 
 	const double h;
@@ -30,10 +30,10 @@ public:
 private:
 	//private variable/s
 	double midpoint{};
-	const size_t M{ 101 };
-	const size_t N{ 1001 };
+	size_t M{};
+	size_t N{};
 	std::vector<std::vector<double>> u{};
-	std::vector<std::vector<double>> v{};
+	std::vector<double> v{};
 
 	const double h;
 	const double k;

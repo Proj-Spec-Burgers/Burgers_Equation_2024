@@ -12,8 +12,8 @@ public:
 private:
 	//private variable/s
 	double midpoint{};
-	const size_t M{ 101 };
-	const size_t N{ 101 };
+	size_t M{};
+	size_t N{};
 	std::vector<std::vector<double>> u{};
 
 	double beta;
@@ -31,10 +31,10 @@ public:
 private:
 	//private variable/s
 	double midpoint{};
-	const size_t M{ 101 };
-	const size_t N{ 101 };
+	size_t M{};
+	size_t N{};
 	std::vector<std::vector<double>> u{};
-	std::vector<std::vector<double>> v{};
+	std::vector<double> v{};
 
 	double beta;
 	const double h;
@@ -53,7 +53,7 @@ private:
 	void SetVectorb(const size_t column);
 	//private variable/s
 	double midpoint{};
-	const size_t M{ 101 };
+	size_t M{};
 	std::vector<std::vector<double>> u{};
 	std::vector<double> b{};
 

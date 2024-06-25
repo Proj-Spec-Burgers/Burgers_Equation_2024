@@ -5,9 +5,10 @@
 ParDiffEq2Euler::ParDiffEq2Euler(double h, double k)
 	: h(h), k(k)
 {
+	SetMandN(h, k, M, N);
 	MidPoint(h, M, midpoint);
 	IniMatrix(M, N, u);
-	InitialConditions(h, M, N, u, midpoint);
+	InitialAndBoundaryConditionsMatrix(h, M, N, u, midpoint);
 }
 //public function/s
 void ParDiffEq2Euler::Euler()
@@ -27,17 +28,16 @@ void ParDiffEq2Euler::Euler()
 	Save(h, k, M, N, u, save_file_name);
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 //public contstructor/s
 ParDiffEq2RK2::ParDiffEq2RK2(double h, double k)
 	: h(h), k(k)
 {
-	MidPoint ini_midpoint(h, M, midpoint);
+	SetMandN(h, k, M, N);
+	MidPoint(h, M, midpoint);
+	IniVector(M, v);
 	IniMatrix(M, N, u);
-	IniMatrix(M, N, v);
-	InitialConditions ini_initial_conditions_u(h, M, N, u, midpoint);
-	InitialConditions ini_initial_conditions_v(h, M, N, v, midpoint);
+	InitialAndBoundaryConditionsVector(h, M, v, midpoint);
+	InitialAndBoundaryConditionsMatrix(h, M, N, u, midpoint);
 }
 //public function/s
 void ParDiffEq2RK2::RK2()
@@ -49,11 +49,11 @@ void ParDiffEq2RK2::RK2()
 	{
 		for (size_t i = 1; i < M - 1; i++)
 		{
-			v[i][j + 1] = u[i][j] - r * (pow(u[i + 1][j], 2) - pow(u[i - 1][j], 2));
+			v[i] = u[i][j] - r * (pow(u[i + 1][j], 2) - pow(u[i - 1][j], 2));
 		}
 		for (size_t i = 1; i < M - 1; i++)
 		{
-			u[i][j + 1] = u[i][j] - s * (pow(v[i + 1][j + 1], 2) - pow(v[i - 1][j + 1], 2));
+			u[i][j + 1] = u[i][j] - s * (pow(v[i + 1], 2) - pow(v[i - 1], 2));
 		}
 	}
 

@@ -4,8 +4,8 @@
 #include "3.Eq3.h"
 #include "4.Burgers.h"
 
-const static double h{ 0.1 };
-const static double k{ 0.005 };
+const static double h{ 0.1 }; /*set your h here*/
+const static double k{ 0.005 }; /*set your k here*/
 
 void DemoParDiffEq1()
 {
