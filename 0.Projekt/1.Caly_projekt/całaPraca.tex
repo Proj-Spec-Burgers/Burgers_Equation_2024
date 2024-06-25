@@ -729,7 +729,7 @@ x\textbackslash{}t & 0        & 0.005    & 0,010    & 0.015    & 0.020    & 0.02
 \end{table}
 Można zauważyć, że jak zmniejszymy k do 0.0005, to można zauważyć, że dla czasu 0 funkcja jest trójkąta. Natomiast dla większego czasu można zauważyć, że funkcja się powoli zaokrągla i~przypomina coraz bardziej wykres dla sinusa, można to zauważyć na rys~\ref{wyk2}. \\
 Na pozostały wykresach~\ref{wyk11,wyk12,wyk13}, można zauważyć jak zmiana współczynników wpływa na generowanie wykresów. Jak zmienia się współczynnik lepkości to można zauważyć że amplituda zwiększa się lub zamieszcza, zależy od wartości. Natomiast gdy się zmienia krok przestrzeni to zmienia się ilość punktów na osi~x, a gdy ostatnią wartość się zmieni (krok czasowy), to powstaje więcej lub mniej rozwiązań $\theta$ od czasu.Na każdych z wykresów można zauważyć, że dla coraz większego czasu amplituda zamieszcza się oraz lekko przesuwa się w prawą stronę.\\
-Gdy warunek na stabilność, $k/h^2\le0.5$ jest nie zachowany to program wygeneruję wyniki, ale w pliku tekstowym pojawiają się wartości "ind", których nie można przeanalizować oraz naszkicować na wykresie tych punktów.\\
+Gdy warunek na stabilność, $k/h^2\le0.5$ jest nie zachowany to program wygeneruję wyniki, ale w pliku tekstowym pojawiają się wartości "ind", których nie można przeanalizować oraz naszkicować na wykresie tych punktów. Natomiast gdy zmienia się wartości lepkości, które są niezgodnie dla obliczeń. \\
 \begin{figure}[ht]
     \centering
     \subfloat[$\beta$=0.1, k=0.001, h=0.025]{%
@@ -749,15 +749,17 @@ Gdy warunek na stabilność, $k/h^2\le0.5$ jest nie zachowany to program wygener
     \caption{Wykresy dla rozwiązań transformaty}
     \label{Wykresy dla rożwiązań}
 \end{figure}
-Przedstawione na wykresach~\ref{fig:wykresy_dla_rozwiazan}, można zobaczyć, że dla większego czasu, że wykres coraz mniej przypomina wykres sinusa. Może wynikać to z błędach numerycznych, które z każdym rozwiązaniem gromadzą się i robią się coraz większe. 
+Przedstawione na wykresach~\ref{fig:wykresy_dla_rozwiazan}, można zobaczyć, że dla większego czasu, że wykres coraz mniej przypomina wykres sinusa. Może wynikać to z błędach numerycznych, które z każdym rozwiązaniem gromadzą się i robią się coraz większe. Dla $beta=1$ dla trzeba więcej rozwiązań dla czasu niż jest przedstawione dla~\ref{wyk22}, podobnie jest dla wykresu~\ref{wyk21}, jeśli zastosuję się $beta=5$. Ponieważ te wartości są bardzo blisko \begin{equation*}
+\beta<\frac{h^2}{2k}
+\end{equation*}
 \begin{figure}[]
     \centering
-    \subfloat[$\beta=12000$, $k=0.00001$, $h=0.01$]{%
+    \subfloat[$\beta=10$, $k=0.00001$, $h=0.01$]{%
         \includegraphics[width=0.45\linewidth]{rys/zl.png}
         \label{wyk21}
     }
     \hfill
-    \subfloat[$\beta=12000$, $k=0.00001$, $h=0.1$]{%
+    \subfloat[$\beta=5$, $k=0.005$, $h=0.1$]{%
         \includegraphics[width=0.45\linewidth]{rys/zl1.png}
         \label{wyk22}
     }
